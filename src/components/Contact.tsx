@@ -116,7 +116,7 @@ export default function Contact() {
         </div>
 
         <p className="text-xs text-muted text-center mt-6">
-          © 2026 Michael Smith
+          © 2026 Faizan Pathan
         </p>
       </div>
     </section>

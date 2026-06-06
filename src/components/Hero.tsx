@@ -162,7 +162,7 @@ export default function Hero() {
         </p>
 
         <h1 className="name-reveal text-6xl md:text-8xl lg:text-9xl font-display italic leading-[0.9] tracking-tight text-text-primary mb-6">
-          Michael Smith
+          Faizan Pathan
         </h1>
 
         <p className="blur-in text-muted mb-6">
