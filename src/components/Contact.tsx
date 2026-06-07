@@ -7,7 +7,7 @@ const MARQUEE_TEXT = "BUILDING THE FUTURE • ".repeat(10);
 
 const SOCIAL_LINKS = ["Twitter", "LinkedIn", "Dribbble", "GitHub"] as const;
 
-const CONTACT_EMAIL = "cloudfluxlabs@gmail.com";
+const CONTACT_EMAIL = "faizan514pathan@gmail.com";
 
 // Get a free access key at https://web3forms.com (verifies to the email above),
 // then paste it here. Submissions are emailed to you — no backend required.
