@@ -9,10 +9,6 @@ const SOCIAL_LINKS = ["Twitter", "LinkedIn", "Dribbble", "GitHub"] as const;
 
 const CONTACT_EMAIL = "faizan514pathan@gmail.com";
 
-// Get a free access key at https://web3forms.com (verifies to the email above),
-// then paste it here. Submissions are emailed to you — no backend required.
-const WEB3FORMS_ACCESS_KEY = "YOUR_WEB3FORMS_ACCESS_KEY";
-
 type Status = "idle" | "sending" | "success" | "error";
 
 export default function Contact() {
@@ -28,22 +24,26 @@ export default function Contact() {
 
     const form = e.currentTarget;
     const data = new FormData(form);
-    data.append("access_key", WEB3FORMS_ACCESS_KEY);
-    data.append("subject", "New message from your portfolio");
-    data.append("from_name", "Portfolio Contact Form");
+    const payload = {
+      name: String(data.get("name") ?? ""),
+      email: String(data.get("email") ?? ""),
+      message: String(data.get("message") ?? ""),
+      botcheck: data.get("botcheck") ? "1" : "",
+    };
 
     try {
-      const res = await fetch("https://api.web3forms.com/submit", {
+      const res = await fetch("/api/contact", {
         method: "POST",
-        body: data,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       });
-      const json = await res.json();
-      if (json.success) {
+      const json = await res.json().catch(() => ({}));
+      if (res.ok && json.success) {
         setStatus("success");
         form.reset();
       } else {
         setStatus("error");
-        setErrorMsg(json.message || "Something went wrong. Please try again.");
+        setErrorMsg(json.error || "Something went wrong. Please try again.");
       }
     } catch {
       setStatus("error");
