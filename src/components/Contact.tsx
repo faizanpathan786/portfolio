@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import Hls from "hls.js";
 import { HLS_SRC } from "../data/site";
@@ -7,9 +7,49 @@ const MARQUEE_TEXT = "BUILDING THE FUTURE • ".repeat(10);
 
 const SOCIAL_LINKS = ["Twitter", "LinkedIn", "Dribbble", "GitHub"] as const;
 
+const CONTACT_EMAIL = "cloudfluxlabs@gmail.com";
+
+// Get a free access key at https://web3forms.com (verifies to the email above),
+// then paste it here. Submissions are emailed to you — no backend required.
+const WEB3FORMS_ACCESS_KEY = "YOUR_WEB3FORMS_ACCESS_KEY";
+
+type Status = "idle" | "sending" | "success" | "error";
+
 export default function Contact() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const marqueeRef = useRef<HTMLDivElement>(null);
+  const [status, setStatus] = useState<Status>("idle");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setStatus("sending");
+    setErrorMsg("");
+
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    data.append("access_key", WEB3FORMS_ACCESS_KEY);
+    data.append("subject", "New message from your portfolio");
+    data.append("from_name", "Portfolio Contact Form");
+
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: data,
+      });
+      const json = await res.json();
+      if (json.success) {
+        setStatus("success");
+        form.reset();
+      } else {
+        setStatus("error");
+        setErrorMsg(json.message || "Something went wrong. Please try again.");
+      }
+    } catch {
+      setStatus("error");
+      setErrorMsg("Network error — please try again or email me directly.");
+    }
+  }
 
   useEffect(() => {
     const video = videoRef.current;
@@ -71,14 +111,99 @@ export default function Contact() {
           Let's work together
         </h2>
 
-        <div className="mt-8 inline-flex">
-          <a href="mailto:hello@michaelsmith.com" className="group relative">
-            <span className="absolute inset-[-2px] accent-gradient rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-            <span className="relative inline-flex items-center bg-bg text-text-primary rounded-full px-7 py-3.5 text-sm">
-              hello@michaelsmith.com ↗
-            </span>
-          </a>
-        </div>
+        {/* Contact form (Web3Forms — no backend) */}
+        <form
+          onSubmit={handleSubmit}
+          className="mt-10 max-w-xl mx-auto text-left"
+        >
+          {/* Honeypot for spam bots */}
+          <input
+            type="checkbox"
+            name="botcheck"
+            tabIndex={-1}
+            className="hidden"
+            aria-hidden="true"
+          />
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="name" className="sr-only">
+                Name
+              </label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                required
+                autoComplete="name"
+                placeholder="Your name"
+                className="w-full rounded-xl bg-surface/60 border border-stroke px-4 py-3 text-sm text-text-primary placeholder:text-muted outline-none focus:border-text-primary/40 transition-colors"
+              />
+            </div>
+            <div>
+              <label htmlFor="email" className="sr-only">
+                Email
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                autoComplete="email"
+                placeholder="Your email"
+                className="w-full rounded-xl bg-surface/60 border border-stroke px-4 py-3 text-sm text-text-primary placeholder:text-muted outline-none focus:border-text-primary/40 transition-colors"
+              />
+            </div>
+          </div>
+
+          <div className="mt-4">
+            <label htmlFor="message" className="sr-only">
+              Message
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              required
+              rows={5}
+              placeholder="Tell me about your project…"
+              className="w-full rounded-xl bg-surface/60 border border-stroke px-4 py-3 text-sm text-text-primary placeholder:text-muted outline-none focus:border-text-primary/40 transition-colors resize-y"
+            />
+          </div>
+
+          <div className="mt-6 flex flex-col items-center gap-4">
+            <button
+              type="submit"
+              disabled={status === "sending"}
+              className="group relative disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              <span className="absolute inset-[-2px] accent-gradient rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+              <span className="relative inline-flex items-center gap-2 bg-bg text-text-primary rounded-full px-7 py-3.5 text-sm">
+                {status === "sending" ? "Sending…" : "Send message"}
+                <span aria-hidden="true">→</span>
+              </span>
+            </button>
+
+            <div aria-live="polite" className="min-h-[1.25rem] text-sm">
+              {status === "success" && (
+                <p className="text-green-400">
+                  Thanks! Your message is on its way — I'll be in touch soon.
+                </p>
+              )}
+              {status === "error" && (
+                <p className="text-red-400">
+                  {errorMsg}{" "}
+                  <a
+                    href={`mailto:${CONTACT_EMAIL}`}
+                    className="underline hover:text-text-primary"
+                  >
+                    Email me directly
+                  </a>
+                  .
+                </p>
+              )}
+            </div>
+          </div>
+        </form>
       </div>
 
       {/* GSAP marquee */}
