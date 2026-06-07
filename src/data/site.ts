@@ -42,6 +42,26 @@ export const PROJECTS: Project[] = [
     aspect: "aspect-[16/11]",
   },
   {
+    title: "RivalEye",
+    category: "Competitor Intel",
+    description:
+      "Competitor intelligence that scans real user conversations across the web, so teams see what people actually think about their rivals — not the marketing.",
+    image: "/projects/rivaleye.png",
+    url: "https://rivaleye.app/",
+    span: "md:col-span-5",
+    aspect: "aspect-[16/11]",
+  },
+  {
+    title: "Elite Badge Media",
+    category: "Growth & PR",
+    description:
+      "PR features, Instagram growth, SEO and reputation management for brands and public figures worldwide — engineered to manufacture authority.",
+    image: "/projects/elitebadge.png",
+    url: "https://elite-badge-media.vercel.app/",
+    span: "md:col-span-7",
+    aspect: "aspect-[16/11]",
+  },
+  {
     title: "Ayush Flower Merchant",
     category: "E-Commerce",
     description:
@@ -69,13 +89,13 @@ export const JOURNAL: JournalEntry[] = [
   },
   {
     title: "Why constraints make better products",
-    image: "/projects/ayushflower.png",
+    image: "/projects/rivaleye.png",
     readTime: "4 min read",
     date: "Apr 2026",
   },
   {
     title: "Building a personal brand that scales",
-    image: "/projects/shadabportfolio.png",
+    image: "/projects/elitebadge.png",
     readTime: "8 min read",
     date: "Mar 2026",
   },
@@ -102,8 +122,8 @@ export const STATS: Stat[] = [
 export const EXPLORATION_IMAGES = [
   "/projects/linkedinflow.png",
   "/projects/shadabportfolio.png",
-  "/projects/ayushflower.png",
+  "/projects/rivaleye.png",
+  "/projects/elitebadge.png",
   "/projects/ayushflower.png",
   "/projects/linkedinflow.png",
-  "/projects/shadabportfolio.png",
 ];
